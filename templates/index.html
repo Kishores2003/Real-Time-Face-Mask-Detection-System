@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Face Mask Detection</title>
+    <style>
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #video-container {
+            position: relative;
+            max-width: 600px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        #video-feed {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+    
+        #camera-btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+        #camera-btn:hover {
+            background-color: #45a049;
+        }
+        #camera-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Real-Time Face Mask Detection</h1>
+
+        <div id="video-container">
+            <img id="video-feed" src="{{ url_for('video_feed') }}" alt="Video feed">
+        </div>
+
+        <div class="controls">
+            <button id="camera-btn" onclick="toggleCamera()">Start Camera</button>
+        </div>
+    </div>
+
+    <script>
+        let cameraActive = false;
+
+        function toggleCamera() {
+            cameraActive = !cameraActive;
+            const button = document.getElementById('camera-btn');
+            
+           
+            if (cameraActive) {
+                button.textContent = 'Stop Camera';
+                button.style.backgroundColor="red";
+            } else {
+                button.textContent = 'Start Camera';
+                button.style.backgroundColor="#4CAF50";
+            }
+
+            
+            fetch('/toggle_camera').then(() => {
+                if (cameraActive) {
+                    document.getElementById('video-feed').src = '{{ url_for("video_feed") }}';  
+                } else {
+                    document.getElementById('video-feed').src = '';  
+                }
+            });
+        }
+    </script>
+</body>
+</html>
